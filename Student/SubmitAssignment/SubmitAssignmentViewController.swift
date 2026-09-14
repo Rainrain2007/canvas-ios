@@ -17,7 +17,6 @@
 //
 
 import Core
-import Firebase
 import UIKit
 import Social
 
@@ -71,8 +70,6 @@ class SubmitAssignmentViewController: UIViewController {
     }
 
     private func setupFirebaseServices() {
-        guard FirebaseOptions.defaultOptions()?.apiKey != nil else { return }
-        FirebaseApp.configure()
         Core.Analytics.shared.handler = self
     }
 }
@@ -80,12 +77,9 @@ class SubmitAssignmentViewController: UIViewController {
 extension SubmitAssignmentViewController: Core.AnalyticsHandler {
 
     func handleScreenView(screenName: String, screenClass: String, application: String) {
-        Firebase.Crashlytics.crashlytics().log("\(screenName) (\(screenClass))")
     }
 
     func handleError(_ name: String, reason: String) {
-        let model = ExceptionModel(name: name, reason: reason)
-        Firebase.Crashlytics.crashlytics().record(exceptionModel: model)
     }
 
     func handleEvent(_ name: String, parameters: [String: Any]?) {

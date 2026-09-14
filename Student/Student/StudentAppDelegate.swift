@@ -20,7 +20,6 @@ import AVKit
 import CanvasCore
 import Combine
 import Core
-import Firebase
 import Heap
 import PSPDFKit
 import UIKit
@@ -222,18 +221,6 @@ class StudentAppDelegate: UIResponder, UIApplicationDelegate, AppEnvironmentDele
     // We can't move this to Core as it would require setting up
     // Cocoapods for Core to pull in Firebase
     func configureRemoteConfig() {
-        let remoteConfig = RemoteConfig.remoteConfig()
-        remoteConfig.fetch(withExpirationDuration: 0) { _, _ in
-            remoteConfig.activate { _, _ in
-                let keys = remoteConfig.allKeys(from: .remote)
-                for key in keys {
-                    guard let feature = ExperimentalFeature(rawValue: key) else { continue }
-                    let value = remoteConfig.configValue(forKey: key).boolValue
-                    feature.isEnabled = value
-                    Firebase.Crashlytics.crashlytics().setCustomValue(value, forKey: feature.userDefaultsKey)
-                }
-            }
-        }
     }
 }
 
@@ -278,12 +265,9 @@ extension StudentAppDelegate: UNUserNotificationCenterDelegate {
 extension StudentAppDelegate: Core.AnalyticsHandler {
 
     func handleScreenView(screenName: String, screenClass: String, application: String) {
-        Firebase.Crashlytics.crashlytics().log("\(screenName) (\(screenClass))")
     }
 
     func handleError(_ name: String, reason: String) {
-        let model = ExceptionModel(name: name, reason: reason)
-        Firebase.Crashlytics.crashlytics().record(exceptionModel: model)
     }
 
     func handleEvent(_ name: String, parameters: [String: Any]?) {
@@ -323,9 +307,6 @@ extension StudentAppDelegate {
             performUIUpdate {
                 let error = error as NSError
                 error.showAlert(from: controller)
-                if error.shouldRecordInCrashlytics {
-                    Firebase.Crashlytics.crashlytics().record(error: error)
-                }
             }
         }
     }
@@ -341,11 +322,6 @@ extension StudentAppDelegate {
             return
         }
 
-        if FirebaseOptions.defaultOptions()?.apiKey != nil {
-            FirebaseApp.configure()
-            configureRemoteConfig()
-            Core.Analytics.shared.handler = self
-        }
         CanvasCrashlytics.setupForReactNative()
     }
 

@@ -114,13 +114,24 @@ public class GetPlannables: UseCase {
     var endDate: Date
     var contextCodes: [String]?
     var filter: String = ""
+    /// Allows callers that do not have calendar filters yet to fetch the user's full planner.
+    /// An explicitly empty filter remains an empty result when this is false.
+    var allowEmptyContextCodesFetch: Bool = false
 
-    public init(userID: String? = nil, startDate: Date, endDate: Date, contextCodes: [String]? = nil, filter: String = "") {
+    public init(
+        userID: String? = nil,
+        startDate: Date,
+        endDate: Date,
+        contextCodes: [String]? = nil,
+        filter: String = "",
+        allowEmptyContextCodesFetch: Bool = false
+    ) {
         self.userID = userID
         self.startDate = startDate
         self.endDate = endDate
         self.contextCodes = contextCodes
         self.filter = filter
+        self.allowEmptyContextCodesFetch = allowEmptyContextCodesFetch
     }
 
     public var cacheKey: String? {
@@ -153,7 +164,7 @@ public class GetPlannables: UseCase {
 
     public func makeRequest(environment: AppEnvironment, completionHandler: @escaping RequestCallback) {
         // If we would send out the request without any context codes the API would return all events so we do an early exit
-        if (contextCodes ?? []).isEmpty {
+        if !allowEmptyContextCodesFetch, (contextCodes ?? []).isEmpty {
             completionHandler(.init(plannables: [], calendarEvents: []), nil, nil)
             return
         }

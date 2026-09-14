@@ -32,7 +32,12 @@ extension StudentAppDelegate: RCTBridgeDelegate {
                 window.rootViewController = controller
             }, completion: { _ in
                 self.environment.startupDidComplete()
-                UIApplication.shared.registerForPushNotifications()
+                // The TrollStore Legacy build uses its own bundle identifier and
+                // cannot use Canvas' APNs entitlement. Skip remote registration so
+                // a missing aps-environment does not surface as an app error.
+                if Bundle.main.bundleIdentifier == "com.instructure.icanvas" {
+                    UIApplication.shared.registerForPushNotifications()
+                }
             })
         }
 

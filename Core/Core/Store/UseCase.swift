@@ -147,6 +147,7 @@ public extension UseCase {
 
 public protocol APIUseCase: UseCase {
     associatedtype Request: APIRequestable
+    associatedtype Response = Request.Response
     var request: Request { get }
 }
 

@@ -1,5 +1,37 @@
 # Canvas iOS Apps
 
+## iOS 16 Legacy Repair Build
+
+This branch is a personal legacy-maintenance build for Canvas Student on
+iPadOS 16.
+
+The maintainer kept an older iPadOS installation to preserve a Virtual Mac
+environment and TrollStore-based installation. As a result, some current
+Canvas releases are no longer available on the device. This branch keeps the
+older deployment target and updates the parts needed to make the legacy app
+usable again.
+
+### What was repaired
+
+- Updated Canvas API request handling for current URL and response behavior.
+- Restored legacy login and OAuth web-flow compatibility.
+- Improved API date parsing and calendar/planner loading behavior.
+- Made file metadata decoding tolerant of missing optional fields so course
+  files can open instead of showing an unexpected-error screen.
+- Added regression coverage for URL construction, API responses, login, file
+  decoding, and planner requests.
+- Kept the Student target compatible with iOS 16 and repaired its React Native
+  framework linkage for unsigned local builds.
+
+### Installation
+
+The first release includes an unsigned IPA intended for installation with
+TrollStore on a compatible device. This is a personal community build, not an
+official Instructure release. You are responsible for reviewing the source,
+using your own Canvas account, and complying with your institution's policies.
+
+Release downloads are available from the GitHub Releases page for this fork.
+
 - [Student](https://itunes.apple.com/us/app/canvas-student/id480883488?mt=8)
 - [Teacher](https://itunes.apple.com/us/app/canvas-teacher/id1257834464?mt=8)
 - [Parent](https://itunes.apple.com/us/app/canvas-parent/id1097996698?mt=8)

@@ -30,6 +30,12 @@ extension Sequence where Element == URL {
 }
 
 public extension URL {
+    /// NotebookLM must be opened by the system so iOS can resolve its Universal Link.
+    var isNotebookLM: Bool {
+        guard let host = host?.lowercased() else { return false }
+        return host == "notebooklm.google.com" || host.hasSuffix(".notebooklm.google.com")
+    }
+
     enum Directories {
 
         public static var temporary: URL {

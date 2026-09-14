@@ -39,6 +39,17 @@ class APIFileTests: XCTestCase {
         XCTAssertNil(file.thumbnail_url)
     }
 
+    func testAPIFileDecodeAllowsMissingOptionalMetadata() throws {
+        var fixture = validFixture
+        fixture["uuid"] = nil
+        fixture["filename"] = nil
+
+        let file = try decoder.decode(APIFile.self, from: serialize(json: fixture))
+
+        XCTAssertNil(file.uuid)
+        XCTAssertEqual(file.filename, "File 1")
+    }
+
     func testAPIFolderItem() throws {
         let data = try encoder.encode(APIFolder.make())
         XCTAssertThrowsError(try decoder.decode(APIFolderItem.self, from: data), "Not for actual api decoding")

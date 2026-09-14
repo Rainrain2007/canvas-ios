@@ -153,6 +153,12 @@ public extension URLComponents {
         return host != sessionHost
     }
 
+    /// NotebookLM must be opened by the system so iOS can resolve its Universal Link.
+    var isNotebookLM: Bool {
+        guard let host = host?.lowercased() else { return false }
+        return host == "notebooklm.google.com" || host.hasSuffix(".notebooklm.google.com")
+    }
+
     func queryValue(for queryName: String) -> String? {
         queryItems?.first(where: { $0.name == queryName })?.value
     }

@@ -100,27 +100,41 @@ extension Array where Element == String {
 }
 
 public class APIJSONDecoder: JSONDecoder {
+    private static let standardFormatter = ISO8601DateFormatter()
+    private static let extendedFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+
     public override init() {
         super.init()
-        dateDecodingStrategy = .iso8601
+
+        // Canvas responses can contain both standard ISO 8601 dates and dates
+        // with fractional seconds. JSONDecoder's built-in strategy accepts
+        // only the standard form, so try both formats for every API response.
+        dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+
+            if let date = Self.extendedFormatter.date(from: dateString) {
+                return date
+            }
+
+            if let date = Self.standardFormatter.date(from: dateString) {
+                return date
+            }
+
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Expected date string to be ISO8601-formatted"
+            )
+        }
     }
 
     // Can decode dates like "2019-06-02T18:07:28.000Z" that RN generates
     public static var extendedPrecisionDecoder: APIJSONDecoder {
         let decoder = APIJSONDecoder()
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withFractionalSeconds]
-        decoder.dateDecodingStrategy = .custom { decoder in
-            let container = try decoder.singleValueContainer()
-            let dateString = try container.decode(String.self)
-            guard let date = formatter.date(from: dateString) else {
-                throw DecodingError.dataCorruptedError(
-                    in: container,
-                    debugDescription: "Expected date string to be ISO8601-formatted"
-                )
-            }
-            return date
-        }
         return decoder
     }
 }

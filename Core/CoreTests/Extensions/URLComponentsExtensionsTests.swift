@@ -138,4 +138,11 @@ class URLComponentsExtensionsTests: XCTestCase {
         let externalURL = URLComponents.parse("https://example.com/courses")
         XCTAssertTrue(externalURL.isExternalWebsite)
     }
+
+    func testNotebookLMURLsUseSystemRoute() {
+        XCTAssertTrue(URLComponents.parse("https://notebooklm.google.com/notebook/abc").isNotebookLM)
+        XCTAssertTrue(URLComponents.parse("https://foo.notebooklm.google.com/notebook/abc").isNotebookLM)
+        XCTAssertFalse(URLComponents.parse("https://google.com/notebooklm/abc").isNotebookLM)
+        XCTAssertFalse(URLComponents.parse("https://notebooklm.google.com.evil.example/notebook/abc").isNotebookLM)
+    }
 }

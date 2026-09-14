@@ -45,7 +45,7 @@ enum EmbeddedExternalTools {
             return false
         }
 
-        let openInSystemSafari = UserDefaults.standard.bool(forKey: "open_lti_safari")
+        let openInSystemSafari = url.isNotebookLM || UserDefaults.standard.bool(forKey: "open_lti_safari")
 
         if openInSystemSafari {
             loginDelegate?.openExternalURLinSafari(url)

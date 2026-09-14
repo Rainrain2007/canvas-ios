@@ -262,8 +262,8 @@ extension LoginWebViewController: WKNavigationDelegate {
         }
 
         let queryItems = components.queryItems
-        if // wait for "https://canvas/login?code="
-            url.absoluteString.hasPrefix("https://canvas/login"),
+        if // wait for "https://sso.canvaslms.com/canvas/login?code="
+            url.absoluteString.hasPrefix("https://sso.canvaslms.com/canvas/login"),
             let code = queryItems?.first(where: { $0.name == "code" })?.value, !code.isEmpty,
             let mobileVerify = mobileVerifyModel, let baseURL = mobileVerify.base_url {
             task?.cancel()

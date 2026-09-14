@@ -21,7 +21,7 @@ import Foundation
 // https://canvas.instructure.com/doc/api/files.html#filePath
 public struct APIFile: Codable, Equatable {
     let id: ID
-    let uuid: String
+    let uuid: String?
     let folder_id: ID
     let display_name: String
     let filename: String
@@ -82,7 +82,7 @@ public struct APIFile: Codable, Equatable {
 
     init(
         id: ID,
-        uuid: String,
+        uuid: String?,
         folder_id: ID,
         display_name: String,
         filename: String,
@@ -137,10 +137,16 @@ public struct APIFile: Codable, Equatable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(ID.self, forKey: .id)
-        uuid = try container.decode(String.self, forKey: .uuid)
+        uuid = try container.decodeIfPresent(String.self, forKey: .uuid)
         folder_id = try container.decode(ID.self, forKey: .folder_id)
         display_name = try container.decode(String.self, forKey: .display_name)
-        filename = try container.decode(String.self, forKey: .filename)
+        do {
+            // Some Canvas servers return null for filename. display_name is the
+            // user-visible name and is the safest fallback for local downloads.
+            filename = try container.decode(String.self, forKey: .filename)
+        } catch {
+            filename = display_name
+        }
         contentType = try container.decode(String.self, forKey: .contentType)
         url = try container.decodeURLIfPresent(forKey: .url)
         size = try container.decodeIfPresent(Int.self, forKey: .size)

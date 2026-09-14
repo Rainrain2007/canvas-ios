@@ -438,7 +438,7 @@ DEPENDENCIES:
   - Yoga (from `./rn/Teacher/node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - boost-for-react-native
     - Firebase
     - FirebaseABTesting
@@ -598,6 +598,6 @@ SPEC CHECKSUMS:
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
 
-PODFILE CHECKSUM: 08afc71ed5bd417b4e447e850541d7db107e57dc
+PODFILE CHECKSUM: 55f9cf615f6039ebfdc2f65aa56346591619a281
 
 COCOAPODS: 1.15.2

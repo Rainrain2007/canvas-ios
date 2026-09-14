@@ -168,6 +168,24 @@ class APIRequestableTests: XCTestCase {
         XCTAssert(UserAgent.default.description.contains(UIDevice.current.systemVersion))
     }
 
+    func testDecodeSupportsStandardISO8601Date() throws {
+        let data = #"{"date":"2025-01-15T10:30:00Z"}"#.data(using: .utf8)!
+
+        XCTAssertEqual(
+            try GetDate().decode(data).date,
+            Date(fromISOString: "2025-01-15T10:30:00Z")
+        )
+    }
+
+    func testDecodeSupportsFractionalISO8601Date() throws {
+        let data = #"{"date":"2025-01-15T10:30:00.000Z"}"#.data(using: .utf8)!
+
+        XCTAssertEqual(
+            try GetDate().decode(data).date,
+            Date(fromISOString: "2025-01-15T10:30:00Z")
+        )
+    }
+
     func testUrlRequestPath() {
         let expected = expectedUrlRequest(path: "api/v1/date")
         XCTAssertEqual(try GetDate().urlRequest(relativeTo: baseURL, accessToken: accessToken, actAsUserID: nil), expected)

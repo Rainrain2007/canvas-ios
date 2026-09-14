@@ -161,7 +161,11 @@ open class Router {
 
         if url.isExternalWebsite, !url.originIsNotification, let url = url.url {
             Analytics.shared.logScreenView(route: "/external_url")
-            AppEnvironment.shared.loginDelegate?.openExternalURL(url)
+            if url.isNotebookLM {
+                AppEnvironment.shared.loginDelegate?.openExternalURLinSafari(url)
+            } else {
+                AppEnvironment.shared.loginDelegate?.openExternalURL(url)
+            }
             return
         }
 

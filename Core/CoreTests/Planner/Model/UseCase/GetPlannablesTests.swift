@@ -98,6 +98,29 @@ class GetPlannablesTests: CoreTestCase {
         wait(for: [expectation], timeout: 1)
     }
 
+    func testMakeRequestAllowsEmptyContextCodesWhenRequested() {
+        api.mock(GetPlannablesRequest(
+            userID: nil,
+            startDate: start,
+            endDate: end,
+            contextCodes: []
+        ), value: [.make(plannable_id: "1")])
+        let expectation = XCTestExpectation(description: "callback")
+        let useCase = GetPlannables(
+            userID: userID,
+            startDate: start,
+            endDate: end,
+            contextCodes: [],
+            allowEmptyContextCodesFetch: true
+        )
+        useCase.makeRequest(environment: environment) { response, _, error in
+            XCTAssertNil(error)
+            XCTAssertEqual(response?.plannables?.first?.plannable_id, "1")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 1)
+    }
+
     func testMakeRequestParentApp() {
         environment.app = .parent
         contextCodes = ["course_1"]

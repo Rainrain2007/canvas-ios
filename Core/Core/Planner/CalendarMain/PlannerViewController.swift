@@ -231,7 +231,14 @@ extension PlannerViewController: CalendarViewControllerDelegate {
 
     func getPlannables(from: Date, to: Date) -> GetPlannables {
         let contextCodes = calendarFilterInteractor.contextsForAPIFiltering().map(\.canvasContextID)
-        return GetPlannables(userID: studentID, startDate: from, endDate: to, contextCodes: contextCodes)
+        let filtersHaveNotLoaded = calendarFilterInteractor.filters.value.isEmpty
+        return GetPlannables(
+            userID: studentID,
+            startDate: from,
+            endDate: to,
+            contextCodes: contextCodes,
+            allowEmptyContextCodesFetch: filtersHaveNotLoaded
+        )
     }
 }
 
