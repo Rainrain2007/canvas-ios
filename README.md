@@ -2,33 +2,45 @@
 
 ## iOS 16 Legacy Repair Build
 
-This branch is a personal legacy-maintenance build for Canvas Student on
-iPadOS 16.
+I made this branch for my own iPad. I deliberately kept iPadOS 16 because I
+still use that device for a Virtual Mac environment, and I rely on TrollStore
+to install software that is no longer available for this older system.
 
-The maintainer kept an older iPadOS installation to preserve a Virtual Mac
-environment and TrollStore-based installation. As a result, some current
-Canvas releases are no longer available on the device. This branch keeps the
-older deployment target and updates the parts needed to make the legacy app
-usable again.
+Keeping the old system was useful, but it also left me stuck with an old
+Canvas Student build. Over time, the app could no longer log in reliably. It
+could not download course files, opening a file showed an unexpected-error
+message, the calendar failed to load, and course announcements sometimes
+showed a reload-and-try-again error. The app could open the login screen, but
+school search, OAuth, and QR-code login could still fail before reaching the
+Canvas server.
 
-### What was repaired
+I created this branch to keep that iPad useful instead of upgrading it and
+losing the Virtual Mac and TrollStore setup. It is a personal iOS 16 repair
+build based on the open-source Canvas iOS project, not an official Instructure
+release.
 
-- Updated Canvas API request handling for current URL and response behavior.
-- Restored legacy login and OAuth web-flow compatibility.
-- Improved API date parsing and calendar/planner loading behavior.
-- Made file metadata decoding tolerant of missing optional fields so course
-  files can open instead of showing an unexpected-error screen.
-- Added regression coverage for URL construction, API responses, login, file
+### What I changed
+
+- Updated API request URLs and response handling so the legacy client can talk
+  to current Canvas servers.
+- Reworked the old login and OAuth web flow, including school lookup and the
+  paths used by QR-code login.
+- Fixed date decoding and planner requests used by the calendar screen.
+- Made file metadata decoding tolerate missing optional fields, so course
+  files can reach the reader instead of immediately showing an error.
+- Adjusted announcement loading and related request handling.
+- Added regression tests for URL construction, API responses, login, file
   decoding, and planner requests.
-- Kept the Student target compatible with iOS 16 and repaired its React Native
-  framework linkage for unsigned local builds.
+- Kept the Student target at iOS 16 and repaired the React Native framework
+  linkage needed for a local unsigned build.
 
 ### Installation
 
 The first release includes an unsigned IPA intended for installation with
-TrollStore on a compatible device. This is a personal community build, not an
-official Instructure release. You are responsible for reviewing the source,
-using your own Canvas account, and complying with your institution's policies.
+TrollStore on a compatible device. This build exists because I need Canvas to
+remain usable on my iPadOS 16 device; it is not an official Instructure
+release. Please review the source, use your own Canvas account, and comply
+with your institution's policies.
 
 Release downloads are available from the GitHub Releases page for this fork.
 
